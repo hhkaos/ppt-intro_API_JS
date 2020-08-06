@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Crear una app visor mapa 2D</title>
+
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+    var view;    
+    require([
+     "esri/Map",
+     "esri/views/MapView",
+      "esri/Basemap",
+      "esri/layers/VectorTileLayer",
+      "esri/layers/TileLayer"
+   ], function(Map, MapView,Basemap, VectorTileLayer, TileLayer){
+
+     //Creamos el mapa base y le añadimos el VectorTileLayer
+     var basemap = new Basemap({
+        baseLayers: [
+        new TileLayer({
+            portalItem: {
+              id: "1b243539f4514b6ba35e7d995890db1d" // World Hillshade
+            }
+          }),
+          new VectorTileLayer({
+            portalItem: {
+              id: "011f87c1f7444ecbba81ba7c7dc838ac" // Copy of Light Gray Canvas
+            }
+          })
+        ]
+      });
+
+     var map = new Map({
+     basemap: basemap //pongo el mapa base que hemos creado arriba
+   });
+
+    view = new MapView({
+     container: "viewDiv",
+     map: map,
+     center: [-5.918075256376066, 42.753266189138564], // longitude, latitude
+     zoom: 4
+   });
+ });
+ </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
