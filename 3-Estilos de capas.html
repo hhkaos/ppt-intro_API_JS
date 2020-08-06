@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Crear una app visor mapa 2D</title>
+
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+    var view; 
+       
+    require([
+     "esri/Map",
+     "esri/views/MapView",
+     "esri/layers/FeatureLayer"
+   ], function(Map, MapView, FeatureLayer) {
+
+     var map = new Map({
+     basemap: "topo-vector"
+   });
+
+    view = new MapView({
+     container: "viewDiv",
+     map: map,
+     center: [-118.80500, 34.02700], // longitude, latitude
+     zoom: 13
+   });
+
+     //creo rederizador simple para la cabecera de los senderos
+     var trailheadsRenderer = {
+        type: "simple",
+        symbol: {
+          type: "picture-marker",
+          url: "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+          width: "18px",
+          height: "18px"
+        }
+      };
+
+      //creo etiquetador
+      var trailheadsLabels = {
+        symbol: {
+          type: "text",
+          color: "#FFFFFF",
+          haloColor: "#5E8D74",
+          haloSize: "2px",
+          font: {
+            size: "12px",
+            family: "Noto Sans",
+            style: "italic",
+            weight: "normal"
+          }
+        },
+        labelPlacement: "above-center",
+        labelExpressionInfo: {
+          expression: "$feature.TRL_NAME"
+        }
+      };
+
+      // Creo la feature layer (points) indicando url, renderizador y etiquetador
+      var Trailheads = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
+        renderer: trailheadsRenderer,
+        labelingInfo: [trailheadsLabels]
+      });
+
+      map.add(Trailheads);
+
+      //creo rederizador simple para los senderos con VisuaVariables
+      var trailsRenderer = {
+        type: "simple",
+        symbol: {
+          color: "#BA55D3",
+          type: "simple-line",
+          style: "solid"
+        },
+        visualVariables: [
+          {
+            type: "size",
+            field: "ELEV_GAIN",
+            minDataValue: 0,
+            maxDataValue: 2300,
+            minSize: "3px",
+            maxSize: "7px"
+          }
+        ]
+      };
+
+      // Creo la feature layer (lines) indicando url, renderizador y transparencia
+      var trailsLayer = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+        renderer: trailsRenderer,
+        opacity: .75
+      });
+
+      map.add(trailsLayer, 0);
+
+      // Creo rederizador simple para senderos para bicis  
+      var bikeTrailsRenderer = {
+        type: "simple",
+        symbol: {
+          type: "simple-line",
+          style: "short-dot",
+          color: "#FF91FF",
+          width: "1px"
+        }
+      };
+      
+      // Creo la feature layer (lines) indicando url, renderizador y filtro con definitionExpression
+      var bikeTrails = new FeatureLayer({
+        url:
+          "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+        renderer: bikeTrailsRenderer,
+        definitionExpression: "USE_BIKE = 'YES'"
+      });
+
+       map.add(bikeTrails, 1);
+
+      // Creo renderizador de Valor Único para las areas de parques y espacios abiertos
+        // Defino función que creará el relleno sólido
+      function createFillSymbol(value, color) {
+        return {
+          value: value,
+          symbol: {
+            color: color,
+            type: "simple-fill",
+            style: "solid",
+            outline: {
+              style: "none"
+            }
+          },
+          label: value
+        };
+      };
+
+      // Creo renderizador
+      var openSpacesRenderer = {
+        type: "unique-value",
+        field: "TYPE",
+        uniqueValueInfos: [
+          createFillSymbol("Natural Areas", "#9E559C"),
+          createFillSymbol("Regional Open Space", "#A7C636"),
+          createFillSymbol("Local Park", "#149ECE"),
+          createFillSymbol("Regional Recreation Park", "#ED5151")
+        ]
+      };
+      
+      // Creo la feature layer (polygons) para areas de parques y espacios abiertos indicando url, renderizador y transparencia
+      var parksLayer = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
+        renderer: openSpacesRenderer,
+        opacity: 0.20
+      });
+
+      map.add(parksLayer, 0); 
+
+ });
+ </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
