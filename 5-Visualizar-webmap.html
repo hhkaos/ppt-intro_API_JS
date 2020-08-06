@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Crear una app visor mapa 2D</title>
+
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+    var view;    
+    require([
+     "esri/WebMap",
+     "esri/views/MapView"
+   ], function(WebMap, MapView) {
+
+     var webmap = new WebMap({
+     portalItem: { // autocasts as new PortalItem()
+    id: "d154567f2eea47ad8706c350fc4f61ea"  //https://josesanore.maps.arcgis.com/home/webmap/viewer.html?webmap=d154567f2eea47ad8706c350fc4f61ea
+  }
+   });
+
+    view = new MapView({
+     container: "viewDiv",
+     map: webmap,
+     center: [-118.80500, 34.02700], // longitude, latitude
+     zoom: 13
+   });
+ });
+ </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
