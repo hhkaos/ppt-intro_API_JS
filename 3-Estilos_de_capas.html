@@ -38,6 +38,10 @@
    });
 
      //creo rederizador simple para la cabecera de los senderos
+     // Playground Picture:
+     // https://developers.arcgis.com/javascript/latest/sample-code/playground/live/index.html#/config=symbols/2d/PictureMarkerSymbol.json
+     // Propiedades del PictureMarkerSymbol
+     // https://developers.arcgis.com/javascript/latest/api-reference/esri-symbols-PictureMarkerSymbol.html#properties-summary
      var trailheadsRenderer = {
         type: "simple",
         symbol: {
@@ -71,7 +75,15 @@
       // Creo la feature layer (points) indicando url, renderizador y etiquetador
       var Trailheads = new FeatureLayer({
         url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
-        renderer: trailheadsRenderer,
+        renderer: {
+        type: "simple",
+        symbol: {
+          type: "picture-marker",
+          url: "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+          width: "18px",
+          height: "18px"
+        }
+      },
         labelingInfo: [trailheadsLabels]
       });
 
