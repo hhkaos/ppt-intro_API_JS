@@ -16,3 +16,5 @@
 * [ejemplo12-BasemapToggle&Gallery](https://jsotopografia.github.io/test/6-BasemapToggle&Gallery.html)
 * [ejemplo13-Find_Places](https://jsotopografia.github.io/test/6-Find_Places.html)
 * [ejemplo14-WidgetFiltrarFeatureLayer](https://jsotopografia.github.io/test/6-WidgetFiltrarFeatureLayer.html)
+* [ejemplo15-IndicacionesDeViaje](https://jsotopografia.github.io/test/7-IndicacionesDeViaje.html)
+* [ejemplo16-RutaDirecciones](https://jsotopografia.github.io/test/7-RutaDirecciones.html)
